@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#2f5bea">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Leave Tracker">
+  <title>Leave Tracker</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="icon.svg">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <button class="icon-btn" id="backBtn" aria-label="Back" hidden>&#8592;</button>
+    <h1 id="pageTitle">Team</h1>
+    <button class="icon-btn" id="lockBtn" aria-label="Admin lock" title="Admin lock" hidden>&#128275;</button>
+  </header>
+
+  <main id="view" tabindex="-1"></main>
+
+  <nav class="tabbar" aria-label="Main">
+    <a href="#/" data-tab="team"><span class="ti">&#128101;</span><span>Team</span></a>
+    <a href="#/apply" data-tab="apply"><span class="ti">&#128197;</span><span>Apply leave</span></a>
+    <a href="#/admin" data-tab="admin"><span class="ti">&#9881;</span><span>Admin</span></a>
+  </nav>
+
+  <dialog id="modal">
+    <form method="dialog" id="modalForm">
+      <h2 id="modalTitle"></h2>
+      <div id="modalBody"></div>
+      <div class="modal-actions">
+        <button type="button" class="btn ghost" id="modalCancel">Cancel</button>
+        <button type="submit" class="btn primary" id="modalOk">Save</button>
+      </div>
+    </form>
+  </dialog>
+
+  <div id="toast" role="status" aria-live="polite"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>

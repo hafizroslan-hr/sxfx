@@ -1,0 +1,13 @@
+{
+  "name": "Leave & OIL Tracker",
+  "short_name": "Leave Tracker",
+  "description": "Track annual leave and off-in-lieu (OIL) balances for your team.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f4f6fb",
+  "theme_color": "#2f5bea",
+  "icons": [
+    { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}
