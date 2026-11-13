@@ -1,0 +1,14 @@
+{
+  "name": "Health Quest",
+  "short_name": "HealthQuest",
+  "description": "Retro RPG that turns your steps, sleep and health data into daily quests.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#12161f",
+  "theme_color": "#20283a",
+  "icons": [
+    { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}

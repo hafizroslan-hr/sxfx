@@ -1,0 +1,231 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+  <meta name="theme-color" content="#20283a">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <title>Health Quest</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="icon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div id="app" class="screen-frame">
+
+    <!-- ============ TITLE ============ -->
+    <section id="title" class="view active" aria-label="Title screen">
+      <div class="title-sky">
+        <canvas id="title-art" width="160" height="96" class="pixel"></canvas>
+        <h1 class="logo">HEALTH<br><span>QUEST</span></h1>
+        <p class="subtitle">A STEP-BY-STEP ADVENTURE</p>
+      </div>
+      <div class="box title-box">
+        <div id="new-game" hidden>
+          <label class="field">YOUR NAME?
+            <input id="name-input" maxlength="8" autocomplete="off" placeholder="ALEX">
+          </label>
+          <div class="field">OUTFIT
+            <div id="outfits" class="swatches" role="radiogroup" aria-label="Outfit colour"></div>
+          </div>
+        </div>
+        <button id="start-btn" class="press-start blink">PRESS START</button>
+        <p class="tiny">©2026 HEALTH QUEST · DATA STAYS ON THIS DEVICE</p>
+      </div>
+    </section>
+
+    <!-- ============ OVERWORLD ============ -->
+    <section id="world" class="view" aria-label="Overworld">
+      <header class="hud">
+        <div class="hud-name"><span id="hud-name">ALEX</span> <span class="lv">:L<span id="hud-lv">1</span></span></div>
+        <div class="hud-bars">
+          <div class="bar-row"><span class="bar-label hp">HP</span><div class="bar"><i id="hud-hp"></i></div></div>
+          <div class="bar-row"><span class="bar-label xp">EXP</span><div class="bar xp-bar"><i id="hud-xp"></i></div></div>
+        </div>
+      </header>
+
+      <div class="map-wrap">
+        <canvas id="map" width="160" height="144" class="pixel" aria-label="Route map showing today's step progress"></canvas>
+        <div id="area-sign" class="area-sign">ROUTE 1</div>
+      </div>
+
+      <div class="box dialog" id="dialog" aria-live="polite">
+        <p id="dialog-text"></p>
+        <span class="next-arrow" aria-hidden="true">▼</span>
+      </div>
+
+      <nav class="quick">
+        <button class="btn" data-open="log">+ LOG</button>
+        <button class="btn" data-open="quests">QUESTS</button>
+        <button class="btn start" id="menu-btn" aria-haspopup="true">MENU</button>
+      </nav>
+
+      <!-- Start menu -->
+      <div id="menu" class="box start-menu" hidden role="menu">
+        <button role="menuitem" data-open="quests">QUESTS</button>
+        <button role="menuitem" data-open="log">LOG</button>
+        <button role="menuitem" data-open="card">TRAINER</button>
+        <button role="menuitem" data-open="badges">BADGES</button>
+        <button role="menuitem" data-open="notify">NOTIFY</button>
+        <button role="menuitem" data-open="options">OPTION</button>
+        <button role="menuitem" data-close-menu>EXIT</button>
+      </div>
+    </section>
+
+    <!-- ============ QUESTS ============ -->
+    <section id="quests" class="view panel" aria-label="Daily quests">
+      <header class="panel-head box"><button class="back" data-back>◀</button><h2>DAILY QUESTS</h2><span id="quest-date" class="tiny"></span></header>
+      <ul id="quest-list" class="list"></ul>
+    </section>
+
+    <!-- ============ LOG ============ -->
+    <section id="log" class="view panel" aria-label="Log health data">
+      <header class="panel-head box"><button class="back" data-back>◀</button><h2>HEALTH LOG</h2>
+        <input type="date" id="log-date" class="date-input" aria-label="Day to edit">
+      </header>
+      <div class="box log-box">
+        <div class="stat-input" data-key="steps" data-step="500">
+          <canvas class="ico pixel" data-icon="shoe" width="8" height="8"></canvas><label for="in-steps">STEPS</label>
+          <div class="stepper"><button data-d="-1">−</button><input id="in-steps" inputmode="numeric" type="number" min="0"><button data-d="1">+</button></div>
+        </div>
+        <div class="stat-input" data-key="sleep" data-step="0.5">
+          <canvas class="ico pixel" data-icon="moon" width="8" height="8"></canvas><label for="in-sleep">SLEEP H</label>
+          <div class="stepper"><button data-d="-1">−</button><input id="in-sleep" inputmode="decimal" type="number" min="0" max="24" step="0.25"><button data-d="1">+</button></div>
+        </div>
+        <div class="stat-input" data-key="water" data-step="1">
+          <canvas class="ico pixel" data-icon="drop" width="8" height="8"></canvas><label for="in-water">WATER</label>
+          <div class="stepper"><button data-d="-1">−</button><input id="in-water" inputmode="numeric" type="number" min="0"><button data-d="1">+</button></div>
+        </div>
+        <div class="stat-input" data-key="active" data-step="5">
+          <canvas class="ico pixel" data-icon="flame" width="8" height="8"></canvas><label for="in-active">ACTIVE MIN</label>
+          <div class="stepper"><button data-d="-1">−</button><input id="in-active" inputmode="numeric" type="number" min="0"><button data-d="1">+</button></div>
+        </div>
+        <div class="stat-input" data-key="hr" data-step="1">
+          <canvas class="ico pixel" data-icon="heart" width="8" height="8"></canvas><label for="in-hr">REST HR</label>
+          <div class="stepper"><button data-d="-1">−</button><input id="in-hr" inputmode="numeric" type="number" min="0" max="250"><button data-d="1">+</button></div>
+        </div>
+        <button id="save-log" class="btn wide">SAVE</button>
+      </div>
+      <div class="box">
+        <h3>IMPORT</h3>
+        <p class="tiny">CSV with a header row. Columns (any order): <b>date, steps, sleep, water, active, hr</b>. Works with exports from iOS Shortcuts, Health Connect or Health Auto Export apps.</p>
+        <label class="btn wide file-btn">CHOOSE CSV<input id="csv-file" type="file" accept=".csv,text/csv" hidden></label>
+      </div>
+    </section>
+
+    <!-- ============ TRAINER CARD ============ -->
+    <section id="card" class="view panel" aria-label="Trainer card">
+      <header class="panel-head box"><button class="back" data-back>◀</button><h2>TRAINER CARD</h2></header>
+      <div class="box card">
+        <div class="card-top">
+          <canvas id="portrait" width="32" height="32" class="pixel portrait"></canvas>
+          <div>
+            <p>NAME/<b id="card-name"></b></p>
+            <p>LEVEL/<b id="card-lv"></b></p>
+            <p>EXP/<b id="card-xp"></b></p>
+            <p>STREAK/<b id="card-streak"></b></p>
+          </div>
+        </div>
+        <div class="bar-row"><span class="bar-label xp">NEXT</span><div class="bar xp-bar"><i id="card-xpbar"></i></div></div>
+        <table class="stats">
+          <tbody id="card-stats"></tbody>
+        </table>
+        <div class="week">
+          <h3>7-DAY STEPS</h3>
+          <div id="week-chart" class="week-chart"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ BADGES ============ -->
+    <section id="badges" class="view panel" aria-label="Badges">
+      <header class="panel-head box"><button class="back" data-back>◀</button><h2>BADGE CASE</h2><span id="badge-count" class="tiny"></span></header>
+      <div id="badge-grid" class="box badge-grid"></div>
+      <div class="box"><p id="badge-info" class="tiny">TAP A BADGE.</p></div>
+    </section>
+
+    <!-- ============ NOTIFY CONTROL PANEL ============ -->
+    <section id="notify" class="view panel" aria-label="Notification control panel">
+      <header class="panel-head box"><button class="back" data-back>◀</button><h2>NOTIFY</h2></header>
+      <div class="box">
+        <div class="row-between">
+          <span>SUMMARIES</span>
+          <button id="notif-toggle" class="toggle" role="switch" aria-checked="false">OFF</button>
+        </div>
+        <p id="notif-perm" class="tiny"></p>
+      </div>
+      <div class="box">
+        <div class="row-between"><label for="notif-start">FROM</label><input id="notif-start" type="time" value="08:00"></div>
+        <div class="row-between"><label for="notif-end">UNTIL</label><input id="notif-end" type="time" value="21:00"></div>
+        <div class="row-between"><label for="notif-every">EVERY</label>
+          <select id="notif-every">
+            <option value="30">30 MIN</option>
+            <option value="60">1 HR</option>
+            <option value="120" selected>2 HR</option>
+            <option value="180">3 HR</option>
+            <option value="240">4 HR</option>
+            <option value="360">6 HR</option>
+          </select>
+        </div>
+        <h3>SCHEDULE</h3>
+        <p class="tiny">Tap a time to skip it.</p>
+        <div id="slot-chips" class="chips"></div>
+      </div>
+      <div class="box">
+        <h3>INCLUDE</h3>
+        <label class="check"><input type="checkbox" id="inc-steps" checked> STEPS LEFT</label>
+        <label class="check"><input type="checkbox" id="inc-quests" checked> QUESTS DONE</label>
+        <label class="check"><input type="checkbox" id="inc-level" checked> LEVEL / EXP</label>
+        <label class="check"><input type="checkbox" id="inc-sleep" checked> SLEEP &amp; WATER</label>
+      </div>
+      <div class="box">
+        <h3>PREVIEW</h3>
+        <div class="notif-preview">
+          <div class="np-title" id="np-title"></div>
+          <div class="np-body" id="np-body"></div>
+        </div>
+        <button id="notif-test" class="btn wide">SEND TEST NOW</button>
+        <p class="tiny">Next: <b id="notif-next">—</b></p>
+        <p class="tiny note">Web apps can only fire scheduled alerts while the app is open or recently backgrounded. Add it to your home screen for the best results.</p>
+      </div>
+    </section>
+
+    <!-- ============ OPTIONS ============ -->
+    <section id="options" class="view panel" aria-label="Options">
+      <header class="panel-head box"><button class="back" data-back>◀</button><h2>OPTION</h2></header>
+      <div class="box">
+        <h3>DAILY GOALS</h3>
+        <div class="row-between"><label for="g-steps">STEPS</label><input id="g-steps" type="number" min="1000" step="500"></div>
+        <div class="row-between"><label for="g-sleep">SLEEP H</label><input id="g-sleep" type="number" min="4" max="12" step="0.5"></div>
+        <div class="row-between"><label for="g-water">WATER</label><input id="g-water" type="number" min="1" max="20"></div>
+        <div class="row-between"><label for="g-active">ACTIVE MIN</label><input id="g-active" type="number" min="5" step="5"></div>
+        <div class="row-between"><span>TEXT SPEED</span>
+          <select id="text-speed"><option value="45">SLOW</option><option value="22" selected>MID</option><option value="6">FAST</option></select>
+        </div>
+        <button id="save-goals" class="btn wide">SAVE</button>
+      </div>
+      <div class="box">
+        <h3>DATA</h3>
+        <button id="export-btn" class="btn wide">EXPORT BACKUP</button>
+        <label class="btn wide file-btn">RESTORE BACKUP<input id="restore-file" type="file" accept=".json,application/json" hidden></label>
+        <button id="reset-btn" class="btn wide danger">ERASE SAVE</button>
+      </div>
+    </section>
+
+    <!-- Pop-up message (EXP gained, level up, badge) -->
+    <div id="popup" class="popup" hidden>
+      <div class="box">
+        <p id="popup-text"></p>
+        <span class="next-arrow" aria-hidden="true">▼</span>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
